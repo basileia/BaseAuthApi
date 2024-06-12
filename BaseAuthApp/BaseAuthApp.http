@@ -1,0 +1,6 @@
+@BaseAuthApp_HostAddress = http://localhost:5050
+
+GET {{BaseAuthApp_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
