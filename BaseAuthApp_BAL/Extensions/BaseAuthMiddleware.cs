@@ -17,6 +17,14 @@ namespace BaseAuthApp_BAL.Extensions
                 await context.Response.WriteAsync("Authorization header missing.");
                 return;
             }
+
+            var authHeader = context.Request.Headers["Authorization"].ToString();
+            if (!authHeader.StartsWith("Basic ", System.StringComparison.OrdinalIgnoreCase))
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Invalid authorization header.");
+                return;
+            }
         }
     }
 }
