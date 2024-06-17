@@ -25,6 +25,12 @@ namespace BaseAuthApp_BAL.Extensions
                 await context.Response.WriteAsync("Invalid authorization header.");
                 return;
             }
+
+            var token = authHeader.Substring("Basic ".Length).Trim();
+            var credentialstring = Encoding.UTF8.GetString(Convert.FromBase64String(token));
+            var credentials = credentialstring.Split(':');
+
+
         }
     }
 }
