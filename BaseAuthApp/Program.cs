@@ -1,3 +1,4 @@
+using BaseAuthApp_BAL.Extensions;
 using BaseAuthApp_DAL.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +22,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<BaseAuthMiddleware>();
 
 app.UseHttpsRedirection();
 
