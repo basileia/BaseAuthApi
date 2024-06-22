@@ -8,6 +8,6 @@ namespace BaseAuthApp_DAL.Contracts
 {
     public interface IRepositoryUser
     {
-        Task<bool> IsAuthorized(string username, string password);
+        Task<bool> UserExistsAsync(string username, string password);
     }
 }
