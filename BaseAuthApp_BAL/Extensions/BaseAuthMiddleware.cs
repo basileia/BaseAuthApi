@@ -1,14 +1,19 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BaseAuthApp_DAL.Contracts;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BaseAuthApp_BAL.Extensions
 {
     public class BaseAuthMiddleware : IMiddleware
     {
+        private readonly IRepositoryUser _repositoryUser;
+
+        public BaseAuthMiddleware(IRepositoryUser repositoryUser)
+        {
+            _repositoryUser = repositoryUser;
+        }
+
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             if (!context.Request.Headers.ContainsKey("Authorization"))
@@ -29,8 +34,19 @@ namespace BaseAuthApp_BAL.Extensions
             var token = authHeader.Substring("Basic ".Length).Trim();
             var credentialstring = Encoding.UTF8.GetString(Convert.FromBase64String(token));
             var credentials = credentialstring.Split(':');
+            var username = credentials[0];
+            var password = credentials[1];
 
+            //if (!IsAuthorized(username, password))  
+            //{
+            //    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            //    await context.Response.WriteAsync("Invalid username or password.");
+            //    return;
+            //}
 
+            await next(context);
         }
+
+        
     }
 }
