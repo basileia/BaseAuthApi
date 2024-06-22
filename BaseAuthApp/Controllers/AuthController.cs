@@ -6,7 +6,7 @@ namespace BaseAuthApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController : BaseController
     {
         private readonly ServiceUser _serviceUser;
 
@@ -15,11 +15,11 @@ namespace BaseAuthApp.Controllers
             _serviceUser = serviceUser;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(UserCreateModel userCreateModel)
-        {
+        //[HttpPost("register")]
+        //public async Task<IActionResult> Register(UserCreateModel userCreateModel)
+        //{
             
-        }
+        //}
 
 
     }
