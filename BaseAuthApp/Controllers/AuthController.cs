@@ -16,17 +16,15 @@ namespace BaseAuthApp.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserCreateModel userCreateModel)
+        public async Task<ActionResult<UserModel>> Register(UserCreateModel userCreateModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return await GetResponse(_serviceUser.RegisterUserAsync(userCreateModel));
-
+            var result = await _serviceUser.RegisterUserAsync(userCreateModel);
+            return GetResponse(result);
         }
-
-
     }
 }
