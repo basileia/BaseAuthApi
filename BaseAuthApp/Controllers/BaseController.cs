@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using BaseAuthApp_BAL.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseAuthApp.Controllers
@@ -12,6 +12,6 @@ namespace BaseAuthApp.Controllers
                 return BadRequest(result.Error);
             }
             return Ok(result.Value);
-        }
+        }        
     }
 }
