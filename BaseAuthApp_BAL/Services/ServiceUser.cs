@@ -32,10 +32,12 @@ namespace BaseAuthApp_BAL.Services
                 return error;
             }
 
-            if (await _repositoryUser.UserExistsAsync(userCreateModel.Username, userCreateModel.Password))
+            if (await _repositoryUser.UserExistsByUsernameAsync(userCreateModel.Username))
             {
                 return UserError.UserExists;
             }
+
+
 
         }
 
