@@ -11,5 +11,6 @@ namespace BaseAuthApp_DAL.Contracts
     {
         Task<bool> UserExistsAsync(string username, string password);
         Task<bool> UserExistsByUsernameAsync(string username);
+        Task<User> GetUserByUsernameAsync(string username); 
     }
 }

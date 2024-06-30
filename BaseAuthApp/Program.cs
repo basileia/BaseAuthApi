@@ -17,6 +17,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
 builder.Services.AddScoped<ServiceUser, ServiceUser>();
+builder.Services.AddTransient<BaseAuthMiddleware>();
 builder.Services.AddScoped<IMapper, Mapper>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -30,7 +31,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<BaseAuthMiddleware>();
+//app.UseMiddleware<BaseAuthMiddleware>();
 
 app.UseHttpsRedirection();
 
