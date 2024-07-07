@@ -20,7 +20,13 @@ namespace BaseAuthApp.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                var error = new Error("ValidationError", "Model validation failed", errors);
+                return BadRequest(error);
             }
 
             var result = await _serviceUser.RegisterUserAsync(userCreateModel);

@@ -7,11 +7,11 @@ namespace BaseAuthApp.Controllers
     {
         public ActionResult<T> GetResponse<T, TError>(Result<T, TError> result)
         {
-            if (!result.IsSuccess)
+            if (result.IsSuccess)
             {
-                return BadRequest(result.Error);
+                return Ok(result.Value);
             }
-            return Ok(result.Value);
+            return BadRequest(result.Error);
         }        
     }
 }

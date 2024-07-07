@@ -4,19 +4,13 @@
     {
         public string Code { get; set; }
         public string Message { get; set; }
-        public List<string>? Details { get; set; }
+        public List<string> Details { get; set; }
 
-       public Error(string code, string message)
+       public Error(string code, string message, List<string> details = null)
         {
             Code = code;
             Message = message;
-        }
-
-        public Error(string code, string message, List<string> details)
-        {
-            Code = code;
-            Message = message;
-            Details = details;
+            Details = details ?? new List<string>();
         }
     }
 }

@@ -1,14 +1,29 @@
 using AutoMapper;
 using BaseAuthApp_BAL.Extensions;
+using BaseAuthApp_BAL.Models;
 using BaseAuthApp_BAL.Services;
 using BaseAuthApp_DAL.Contracts;
 using BaseAuthApp_DAL.Data;
 using BaseAuthApp_DAL.Repository;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var errors = context.ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+
+            var error = new Error("ValidationError", "Model validation failed", errors);
+            return new BadRequestObjectResult(error);
+        };
+    });
 
 var Configuration = builder.Configuration;
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -30,8 +45,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-//app.UseMiddleware<BaseAuthMiddleware>();
 
 app.UseHttpsRedirection();
 

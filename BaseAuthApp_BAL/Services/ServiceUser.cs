@@ -26,17 +26,6 @@ namespace BaseAuthApp_BAL.Services
 
         public async Task<Result<UserModel, Error>> RegisterUserAsync(UserCreateModel userCreateModel)
         {
-            var validationResults = new List<ValidationResult>();
-            var validationContext = new ValidationContext(userCreateModel, serviceProvider: null, items: null);
-            bool isValid = Validator.TryValidateObject(userCreateModel, validationContext, validationResults, validateAllProperties: true);
-
-            if (!isValid)
-            {
-                var errorDetails = validationResults.Select(vr => vr.ErrorMessage).ToList();
-                var error = new Error("ValidationError", "Model validation failed", errorDetails);
-                return error;
-            }
-
             if (await _repositoryUser.UserExistsByUsernameAsync(userCreateModel.Username))
             {
                 return UserError.UserExists;
@@ -45,13 +34,11 @@ namespace BaseAuthApp_BAL.Services
             userCreateModel.Password = hashPassword(userCreateModel.Password);          
 
             var newUser = _mapper.Map<UserCreateModel, User>(userCreateModel);
-                        
             await _repositoryUser.Add(newUser);
 
             var userModel = _mapper.Map<User, UserModel>(newUser);
 
             return userModel;
-
         }
 
         private string hashPassword(string password)
