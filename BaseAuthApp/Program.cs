@@ -48,6 +48,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+//app.UseMiddleware<BaseAuthMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();

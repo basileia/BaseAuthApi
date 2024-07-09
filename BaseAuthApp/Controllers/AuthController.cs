@@ -32,5 +32,23 @@ namespace BaseAuthApp.Controllers
             var result = await _serviceUser.RegisterUserAsync(userCreateModel);
             return GetResponse(result);
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<UserModel>> Login(LoginModel loginModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                var error = new Error("ValidationError", "Model validation failed", errors);
+                return BadRequest(error);
+            }
+
+            var result = await _serviceUser.ValidateUserWithResultAsync(loginModel.Username, loginModel.Password);
+            return GetResponse(result);            
+        }
     }
 }

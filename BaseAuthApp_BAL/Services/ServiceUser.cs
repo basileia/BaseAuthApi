@@ -19,11 +19,6 @@ namespace BaseAuthApp_BAL.Services
             _mapper = mapper;
         }
 
-        public async Task<bool> ValidateUserAsync(string username, string password)
-        {
-            return await _repositoryUser.UserExistsAsync(username, password);
-        }
-
         public async Task<Result<UserModel, Error>> RegisterUserAsync(UserCreateModel userCreateModel)
         {
             if (await _repositoryUser.UserExistsByUsernameAsync(userCreateModel.Username))
@@ -41,11 +36,33 @@ namespace BaseAuthApp_BAL.Services
             return userModel;
         }
 
+        public async Task<bool> ValidateUserAsync(string username, string password)
+        {
+            var user = await _repositoryUser.GetUserByUsernameAsync(username);
+
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            {
+                return false;
+            }
+
+            return true;           
+        }        
+
+        public async Task<Result<UserModel, Error>> ValidateUserWithResultAsync(string username, string password)
+        {
+            var user = await _repositoryUser.GetUserByUsernameAsync(username);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            {
+                return AuthenticationError.InvalidCredentials;
+            }
+
+            var userModel = _mapper.Map<User, UserModel>(user);
+            return userModel;
+        }
+
         private string hashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
-
-
     }
 }

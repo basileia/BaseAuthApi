@@ -9,7 +9,6 @@ namespace BaseAuthApp_DAL.Contracts
 {
     public interface IRepositoryUser : IRepositoryBase<User>
     {
-        Task<bool> UserExistsAsync(string username, string password);
         Task<bool> UserExistsByUsernameAsync(string username);
         Task<User> GetUserByUsernameAsync(string username); 
     }

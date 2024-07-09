@@ -15,19 +15,6 @@ namespace BaseAuthApp_DAL.Repository
     {
         public RepositoryUser(AppDbContext context) : base(context) { }
 
-        public async Task<bool> UserExistsAsync(string username, string password)
-        {
-            var user = await GetUserByUsernameAsync(username);
-            
-            if (user == null)
-            {
-                return false;
-            }
-
-            return BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
-            
-        }
-
         public async Task<bool> UserExistsByUsernameAsync(string username)
         {
             return await EntityExistsAsync(user => user.Username == username);
