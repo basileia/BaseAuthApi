@@ -36,17 +36,17 @@ namespace BaseAuthApp_BAL.Services
             return userModel;
         }
 
-        public async Task<bool> ValidateUserAsync(string username, string password)
-        {
-            var user = await _repositoryUser.GetUserByUsernameAsync(username);
+        //public async Task<bool> ValidateUserAsync(string username, string password)
+        //{
+        //    var user = await _repositoryUser.GetUserByUsernameAsync(username);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-            {
-                return false;
-            }
+        //    if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        //    {
+        //        return false;
+        //    }
 
-            return true;           
-        }        
+        //    return true;           
+        //}        
 
         public async Task<Result<UserModel, Error>> ValidateUserWithResultAsync(string username, string password)
         {

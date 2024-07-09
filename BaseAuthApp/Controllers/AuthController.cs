@@ -50,5 +50,18 @@ namespace BaseAuthApp.Controllers
             var result = await _serviceUser.ValidateUserWithResultAsync(loginModel.Username, loginModel.Password);
             return GetResponse(result);            
         }
+
+        [HttpGet("profile")]
+        public ActionResult GetProfile()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return BadRequest(AuthenticationError.UnauthorizedAccess);
+            }
+
+            var userName = User.Identity.Name;
+
+            return Ok(new { UserName = userName });
+        }
     }
 }

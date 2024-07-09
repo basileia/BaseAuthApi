@@ -2,6 +2,7 @@
 using BaseAuthApp_BAL.Services;
 using BaseAuthApp_DAL.Contracts;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -39,13 +40,17 @@ namespace BaseAuthApp_BAL.Extensions
             var credentialstring = Encoding.UTF8.GetString(Convert.FromBase64String(token));
             var credentials = credentialstring.Split(':');
             
-            if (credentials.Length == 2)
+            if (credentials != null && credentials.Length == 2)
             {
                 var username = credentials[0];
                 var password = credentials[1];
 
-                if (await _serviceUser.ValidateUserAsync(username, password))
-                {                   
+                var result = await _serviceUser.ValidateUserWithResultAsync(username, password);
+                if (result.IsSuccess)
+                {
+                    var claims = new[] { new Claim(ClaimTypes.Name, username) };
+                    var identity = new ClaimsIdentity(claims, "Basic");
+                    context.User = new ClaimsPrincipal(identity);
                     await next(context);
                     return;
                 }                
