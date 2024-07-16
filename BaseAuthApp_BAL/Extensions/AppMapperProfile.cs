@@ -10,7 +10,8 @@ namespace BaseAuthApp_BAL.Extensions
         public AppMapperProfile()
         {
             CreateMap<User, UserModel>();
-            CreateMap<UserCreateModel, User>();
+            CreateMap<UserCreateModel, User>()
+                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => BCrypt.Net.BCrypt.HashPassword(src.Password)));
         }
     }
 }

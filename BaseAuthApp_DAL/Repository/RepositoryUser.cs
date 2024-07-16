@@ -1,6 +1,7 @@
 ﻿using BaseAuthApp_DAL.Contracts;
 using BaseAuthApp_DAL.Data;
 using BaseAuthApp_DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,14 @@ namespace BaseAuthApp_DAL.Repository
     {
         public RepositoryUser(AppDbContext context) : base(context) { }
 
-        public async Task<bool> UserExistsAsync(string username, string password)
+        public async Task<bool> UserExistsByUsernameAsync(string username)
         {
-            return await EntityExistsAsync(user => user.Username == username && user.Password == password);
+            return await EntityExistsAsync(user => user.Username == username);
+        }
+
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            return await GetByPredicateAsync(user => user.Username == username);
         }
 
     }

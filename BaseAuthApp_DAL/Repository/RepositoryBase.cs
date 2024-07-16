@@ -24,5 +24,16 @@ namespace BaseAuthApp_DAL.Repository
         {
             return await _dbSet.AnyAsync(predicate);
         }
+
+        public async Task Add(T entity)
+        {  
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<T> GetByPredicateAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbSet.FirstOrDefaultAsync(predicate);
+        }
     }
 }

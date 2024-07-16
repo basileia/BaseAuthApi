@@ -1,8 +1,10 @@
-﻿using BaseAuthApp_BAL.Services;
+﻿using BaseAuthApp_BAL.Models;
+using BaseAuthApp_BAL.Services;
 using BaseAuthApp_DAL.Contracts;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 namespace BaseAuthApp_BAL.Extensions
 
@@ -21,43 +23,48 @@ namespace BaseAuthApp_BAL.Extensions
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (!context.Request.Headers.ContainsKey("Authorization"))
+            if (!context.Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues value))
             {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Authorization header missing.");
+                await WriteErrorResponse(context, AuthenticationError.AuthHeaderMissing);
                 return;
             }
 
-            var authHeader = context.Request.Headers["Authorization"].ToString();
+            var authHeader = value.ToString();
             if (!authHeader.StartsWith("Basic ", System.StringComparison.OrdinalIgnoreCase))
             {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Invalid authorization header.");
+                await WriteErrorResponse(context, AuthenticationError.InvalidAuthHeader);
                 return;
             }
 
             var token = authHeader.Substring("Basic ".Length).Trim();
             var credentialstring = Encoding.UTF8.GetString(Convert.FromBase64String(token));
             var credentials = credentialstring.Split(':');
-            var username = credentials[0];
-            var password = credentials[1];
-
-            if (!await _serviceUser.ValidateUserAsync(username, password))
+            
+            if (credentials != null && credentials.Length == 2)
             {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                await context.Response.WriteAsync("Invalid username or password.");
-                return;
-            }
+                var username = credentials[0];
+                var password = credentials[1];
 
-            if (await _serviceUser.ValidateUserAsync(username, password))
-            {
-                var claims = new[] { new Claim(ClaimTypes.Name, username) };
-                var identity = new ClaimsIdentity(claims, "Basic");
-                context.User = new ClaimsPrincipal(identity);
+                var result = await _serviceUser.ValidateUserWithResultAsync(username, password);
+                if (result.IsSuccess)
+                {
+                    var claims = new[] { new Claim(ClaimTypes.Name, username) };
+                    var identity = new ClaimsIdentity(claims, "Basic");
+                    context.User = new ClaimsPrincipal(identity);
+                    await next(context);
+                    return;
+                }                
             }
-
-            await next(context);
+            await WriteErrorResponse(context, AuthenticationError.InvalidCredentials);
         }
-        
+
+        private static async Task WriteErrorResponse(HttpContext context, Error error)
+        {
+            var errorJson = JsonSerializer.Serialize(error);
+
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+            await context.Response.WriteAsync(errorJson);
+        }
     }
 }

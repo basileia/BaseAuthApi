@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BaseAuthApp_BAL\BaseAuthApp_BAL.csproj" />
     <ProjectReference Include="..\BaseAuthApp_DAL\BaseAuthApp_DAL.csproj" />
   </ItemGroup>

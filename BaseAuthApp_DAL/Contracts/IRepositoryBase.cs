@@ -10,5 +10,8 @@ namespace BaseAuthApp_DAL.Contracts
     public interface IRepositoryBase<T>
     {
         Task<bool> EntityExistsAsync(Expression<Func<T, bool>> predicate);
+        Task Add(T entity);
+        
+        Task<T> GetByPredicateAsync(Expression<Func<T, bool>> predicate);
     }
 }
