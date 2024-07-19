@@ -46,12 +46,12 @@ namespace BaseAuthApp.Controllers
         [HttpGet("profile")]
         public ActionResult GetProfile()
         {
-            if (!User.Identity.IsAuthenticated)
+            var userName = User.Identity?.Name;
+
+            if (userName == null)
             {
                 return BadRequest(AuthenticationError.UnauthorizedAccess);
             }
-
-            var userName = User.Identity.Name;
 
             return Ok(new { UserName = userName });
         }
