@@ -25,14 +25,12 @@ namespace BaseAuthApp_BAL.Services
             {
                 return UserError.UserExists;
             }
-                        
-            userCreateModel.Password = hashPassword(userCreateModel.Password);          
 
-            var newUser = _mapper.Map<UserCreateModel, User>(userCreateModel);
+            var newUser = new User { Username = userCreateModel.Username, PasswordHash = hashPassword(userCreateModel.Password) };
+
             await _repositoryUser.Add(newUser);
 
             var userModel = _mapper.Map<User, UserModel>(newUser);
-
             return userModel;
         }
 
