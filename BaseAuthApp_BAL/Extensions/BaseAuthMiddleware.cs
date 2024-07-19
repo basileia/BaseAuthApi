@@ -8,7 +8,6 @@ using System.Text.Json;
 
 namespace BaseAuthApp_BAL.Extensions
 
-    //pořešit error handler
 {
     public class BaseAuthMiddleware : IMiddleware
     {
