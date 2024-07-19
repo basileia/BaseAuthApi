@@ -19,15 +19,10 @@ namespace BaseAuthApp.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserModel>> Register([FromForm] UserCreateModel userCreateModel)
         {
-            if (!ModelState.IsValid)
+            var validationResponse = ValidateModelState();
+            if (validationResponse != null)
             {
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToList();
-
-                var error = new Error("ValidationError", "Model validation failed", errors);
-                return BadRequest(error);
+                return validationResponse;
             }
 
             var result = await _serviceUser.RegisterUserAsync(userCreateModel);
@@ -37,15 +32,10 @@ namespace BaseAuthApp.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserModel>> Login([FromForm] LoginModel loginModel)
         {
-            if (!ModelState.IsValid)
+            var validationResponse = ValidateModelState();
+            if (validationResponse != null)
             {
-                var errors = ModelState.Values
-                    .SelectMany(v => v.Errors)
-                    .Select(e => e.ErrorMessage)
-                    .ToList();
-
-                var error = new Error("ValidationError", "Model validation failed", errors);
-                return BadRequest(error);
+                return validationResponse;
             }
 
             var result = await _serviceUser.ValidateUserWithResultAsync(loginModel.Username, loginModel.Password);

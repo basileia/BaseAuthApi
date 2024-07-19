@@ -12,6 +12,22 @@ namespace BaseAuthApp.Controllers
                 return Ok(result.Value);
             }
             return BadRequest(result.Error);
-        }        
+        }
+
+        protected ActionResult ValidateModelState()
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .Select(e => e.ErrorMessage)
+                    .ToList();
+
+                var error = new Error("ValidationError", "Model validation failed", errors);
+                return BadRequest(error);
+            }
+
+            return null;
+        }
     }
 }

@@ -26,7 +26,11 @@ namespace BaseAuthApp_BAL.Services
                 return UserError.UserExists;
             }
 
-            var newUser = new User { Username = userCreateModel.Username, PasswordHash = hashPassword(userCreateModel.Password) };
+            var newUser = new User
+            {
+                Username = userCreateModel.Username,
+                PasswordHash = hashPassword(userCreateModel.Password)
+            };           
 
             await _repositoryUser.Add(newUser);
 
