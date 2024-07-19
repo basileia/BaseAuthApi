@@ -5,7 +5,6 @@ using BaseAuthApp_BAL.Services;
 using BaseAuthApp_DAL.Contracts;
 using BaseAuthApp_DAL.Data;
 using BaseAuthApp_DAL.Repository;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;

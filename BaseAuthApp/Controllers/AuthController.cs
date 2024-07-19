@@ -1,5 +1,6 @@
 ﻿using BaseAuthApp_BAL.Models;
 using BaseAuthApp_BAL.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BaseAuthApp.Controllers
@@ -51,6 +52,7 @@ namespace BaseAuthApp.Controllers
             return GetResponse(result);            
         }
 
+        [Authorize]
         [HttpGet("profile")]
         public ActionResult GetProfile()
         {

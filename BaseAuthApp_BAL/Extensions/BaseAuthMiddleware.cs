@@ -2,6 +2,7 @@
 using BaseAuthApp_BAL.Services;
 using BaseAuthApp_DAL.Contracts;
 using Microsoft.AspNetCore.Http;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -22,6 +23,14 @@ namespace BaseAuthApp_BAL.Extensions
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
+            var bypassPaths = new[] { "/api/Auth/register", "/api/Auth/login" };
+
+            if (bypassPaths.Contains(context.Request.Path.ToString()))
+            {
+                await next(context);
+                return;
+            }
+
             if (!context.Request.Headers.TryGetValue("Authorization", out Microsoft.Extensions.Primitives.StringValues value))
             {
                 await WriteErrorResponse(context, AuthenticationError.AuthHeaderMissing);
