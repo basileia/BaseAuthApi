@@ -17,7 +17,7 @@ namespace BaseAuthApp.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<UserModel>> Register(UserCreateModel userCreateModel)
+        public async Task<ActionResult<UserModel>> Register([FromForm] UserCreateModel userCreateModel)
         {
             if (!ModelState.IsValid)
             {
@@ -35,7 +35,7 @@ namespace BaseAuthApp.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<UserModel>> Login(LoginModel loginModel)
+        public async Task<ActionResult<UserModel>> Login([FromForm] LoginModel loginModel)
         {
             if (!ModelState.IsValid)
             {
